@@ -1,0 +1,18 @@
+<svg width="800" height="620" viewBox="0 0 800 620" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="620" rx="36" fill="#F3F4FF"/>
+  <circle cx="150" cy="110" r="82" fill="#D8D4FF"/>
+  <circle cx="680" cy="148" r="96" fill="#D6F5E7"/>
+  <circle cx="672" cy="500" r="120" fill="#D7EBFF"/>
+  <path d="M175 530C195 406 236 325 300 300C357 277 433 278 492 306C563 338 621 420 645 530H175Z" fill="#E2E8FF"/>
+  <rect x="210" y="190" width="92" height="150" rx="22" fill="#8B5CF6" fill-opacity="0.8"/>
+  <rect x="315" y="170" width="94" height="170" rx="22" fill="#7DD3FC" fill-opacity="0.75"/>
+  <rect x="430" y="182" width="90" height="158" rx="22" fill="#A7F3D0" fill-opacity="0.8"/>
+  <circle cx="256" cy="170" r="36" fill="#F8D7A9"/>
+  <circle cx="362" cy="152" r="36" fill="#F8D7A9"/>
+  <circle cx="475" cy="162" r="36" fill="#F8D7A9"/>
+  <path d="M228 300H286" stroke="#4B5563" stroke-width="5" stroke-linecap="round"/>
+  <path d="M334 330H407" stroke="#4B5563" stroke-width="5" stroke-linecap="round"/>
+  <path d="M438 306H511" stroke="#4B5563" stroke-width="5" stroke-linecap="round"/>
+  <path d="M220 500C232 459 260 408 322 404C370 401 445 427 498 422C569 416 607 382 620 333" stroke="#8B5CF6" stroke-width="10" stroke-linecap="round" stroke-dasharray="10 14"/>
+  <text x="90" y="560" fill="#4F46E5" font-size="26" font-family="Arial, sans-serif" font-weight="700">EqualSpace</text>
+</svg>

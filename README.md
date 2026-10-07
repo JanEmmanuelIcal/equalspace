@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EqualSpace
+
+EqualSpace is a modern gender-awareness and equality platform for students and the public. It helps people challenge stereotypes, understand social bias, explore inclusive learning resources, and reflect on real experiences in a respectful digital environment.
+
+## Features
+
+- Premium landing page with responsive design and motion effects
+- Educational learning library on gender stereotypes and equality
+- Interactive quiz with scoring and explanations
+- Gender perception poll with chart-based results
+- Story-sharing flow with moderation-ready structure
+- Law and resource library with official references
+- User dashboard and progress tracking
+- Role-checked admin dashboard screens (content-management controls remain prototype UI)
+- Supabase cookie-backed authentication and row-level security setup
+- Local browser-only demo storage for poll responses, stories, quiz attempts, and lesson progress
+
+## Tech Stack
+
+- Next.js 16 App Router
+- React 19
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+- Recharts
+- Lucide React
+- Supabase client and SSR helpers
+
+## Project Structure
+
+- `app/` — routes, metadata, pages, and SEO files
+- `components/` — reusable UI and layout building blocks
+- `lib/` — shared data and Supabase configuration
+- `public/images/` — illustration placeholders and future asset library
 
 ## Getting Started
 
-First, run the development server:
+1. Install dependencies:
+
+   npm install
+
+2. Create `.env.local` and add your Supabase project URL and publishable key (or a legacy anon key).
+
+4. Start the development server:
+
+   npm run dev
+
+5. Open http://localhost:3000
+
+## Environment Variables
+
+Create a `.env.local` file with your project values:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Supabase Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Create a new Supabase project.
+2. Enable authentication and set up a public schema.
+3. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` to `.env.local`. `NEXT_PUBLIC_SUPABASE_ANON_KEY` is accepted for older projects.
+4. Enable email/password authentication and allow your app origin in Supabase Auth redirect URLs.
+5. Run `supabase/schema.sql` in the Supabase SQL Editor for a new project. For a database that already has this schema, apply and verify the changed policies and grants separately; this repository does not yet include versioned migrations.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Database Migration
 
-## Learn More
+The schema includes `profiles`, `lessons`, `quiz_questions`, `quiz_attempts`, `poll_responses`, `stories`, `laws`, and `user_progress`. Profile roles must be assigned through a trusted administrative database channel; users cannot promote themselves. Admin routes fail closed unless Supabase is configured and the authenticated profile has the `admin` role. The admin data-management pages are still prototype screens and must be connected to secured database CRUD operations before production use.
 
-To learn more about Next.js, take a look at the following resources:
+Without Supabase configuration, community submissions and learning progress are stored only in the current browser. They are not shared with other users or devices, and real authentication and admin access are unavailable.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This project is designed for deployment to Vercel with Supabase integration. Ensure the environment variables are configured in the Vercel dashboard before deploying.
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is for educational and portfolio demonstration purposes.
