@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, BookOpenText, CheckCircle2, Quote } from "lucide-react";
-import { lessons } from "@/lib/data";
+import { lessons, lessonQuizQuestions } from "@/lib/data";
 import { LessonProgressButton } from "@/components/lesson-progress-button";
+import { LessonQuiz } from "@/components/lesson-quiz";
 
 export function generateStaticParams() {
   return lessons.map((lesson) => ({ slug: lesson.slug }));
@@ -58,6 +59,10 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ s
 
           <p className="text-lg leading-8 text-slate-600 dark:text-slate-300">{lesson.excerpt}</p>
 
+          <Link href="#lesson-quiz" className="inline-flex items-center gap-2 rounded-full bg-violet-50 px-4 py-2.5 text-sm font-semibold text-violet-800 transition hover:bg-violet-100 dark:bg-violet-950/40 dark:text-violet-200 dark:hover:bg-violet-950/70">
+            Finish with a 10-question, 5-stage quiz <span aria-hidden="true">↓</span>
+          </Link>
+
           <div className="space-y-8">
             {lesson.content.map((section) => (
               <section key={section.heading} className="space-y-3">
@@ -98,6 +103,8 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ s
               ))}
             </ul>
           </div>
+
+          <LessonQuiz lessonTitle={lesson.title} lessonSlug={lesson.slug} questions={lessonQuizQuestions[lesson.slug] || []} />
 
           <div>
             <LessonProgressButton slug={lesson.slug} />

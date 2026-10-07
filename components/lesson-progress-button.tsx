@@ -14,7 +14,14 @@ export function LessonProgressButton({ slug }: { slug: string }) {
     getCompletedLessons().then((lessons) => {
       if (active) setCompleted(lessons.includes(slug));
     });
-    return () => { active = false; };
+    const handleCompleted = (event: Event) => {
+      if (event instanceof CustomEvent && event.detail === slug) setCompleted(true);
+    };
+    window.addEventListener("equalspace-lesson-completed", handleCompleted);
+    return () => {
+      active = false;
+      window.removeEventListener("equalspace-lesson-completed", handleCompleted);
+    };
   }, [slug]);
 
   const handleComplete = async () => {

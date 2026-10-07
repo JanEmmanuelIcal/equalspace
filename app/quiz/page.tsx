@@ -63,8 +63,9 @@ export default function QuizPage() {
           <>
             <div className="mb-6 flex items-center justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-violet-600 dark:text-violet-300">Gender equality quiz</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-violet-600 dark:text-violet-300">Quick challenge</p>
                 <h1 className="mt-2 text-3xl font-black text-slate-900 dark:text-white">Question {questionIndex + 1}</h1>
+                <Link href="/learn" className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-violet-700 hover:underline dark:text-violet-200">Want a deeper challenge? Explore 10-question lesson courses <ArrowRight size={14} /></Link>
               </div>
               <div className="rounded-full bg-violet-50 px-3 py-1.5 text-sm font-semibold text-violet-700 dark:bg-violet-950/40 dark:text-violet-200">
                 {questionIndex + 1} / {quizQuestions.length}

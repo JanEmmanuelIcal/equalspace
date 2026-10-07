@@ -4,17 +4,19 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { CheckCircle2, Circle, LoaderCircle } from "lucide-react";
 import { lessons } from "@/lib/data";
-import { getCompletedLessons } from "@/lib/supabase";
+import { getCompletedLessons, getLessonQuizScores } from "@/lib/supabase";
 
 export function ProgressTracker() {
   const [completedSlugs, setCompletedSlugs] = useState<string[]>([]);
+  const [quizScores, setQuizScores] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
-    getCompletedLessons().then((slugs) => {
+    Promise.all([getCompletedLessons(), getLessonQuizScores()]).then(([slugs, scores]) => {
       if (active) {
         setCompletedSlugs(slugs);
+        setQuizScores(scores);
         setIsLoading(false);
       }
     });
@@ -43,7 +45,10 @@ export function ProgressTracker() {
                 {complete ? <CheckCircle2 size={19} className="shrink-0 text-emerald-600" /> : <Circle size={19} className="shrink-0 text-slate-400" />}
                 <span className="truncate font-medium text-slate-700 dark:text-slate-200">{lesson.title}</span>
               </span>
-              <span className={`shrink-0 text-xs font-semibold uppercase tracking-[0.1em] ${complete ? "text-emerald-700 dark:text-emerald-300" : "text-slate-500 dark:text-slate-400"}`}>{complete ? "Completed" : "Not started"}</span>
+              <span className="shrink-0 text-right">
+                <span className={`block text-xs font-semibold uppercase tracking-widest ${complete ? "text-emerald-700 dark:text-emerald-300" : "text-slate-500 dark:text-slate-400"}`}>{complete ? "Completed" : "Not started"}</span>
+                {typeof quizScores[lesson.slug] === "number" && <span className="mt-1 block text-xs text-slate-500 dark:text-slate-400">Quiz {quizScores[lesson.slug]}/10</span>}
+              </span>
             </Link>
           );
         })}

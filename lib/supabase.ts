@@ -296,12 +296,37 @@ export async function getCompletedLessons(): Promise<string[]> {
   }
 }
 
-export async function markLessonComplete(slug: string): Promise<ServiceResponse> {
+export async function getLessonQuizScores(): Promise<Record<string, number>> {
+  const localScores = readLocal<Record<string, number>>("equalspace-lesson-quiz-scores", {});
+  if (!supabase) return localScores;
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return localScores;
+    const { data, error } = await supabase.from("user_progress").select("lesson_slug,quiz_score").eq("user_id", user.id);
+    if (error) return localScores;
+    return (data || []).reduce<Record<string, number>>((scores, item) => {
+      if (item.lesson_slug && typeof item.quiz_score === "number") scores[item.lesson_slug] = item.quiz_score;
+      return scores;
+    }, localScores);
+  } catch {
+    return localScores;
+  }
+}
+
+export async function markLessonComplete(slug: string, quizScore?: number): Promise<ServiceResponse> {
+  if (quizScore !== undefined && (!Number.isInteger(quizScore) || quizScore < 0 || quizScore > 10)) {
+    return unavailable("The lesson quiz score is not valid and could not be saved.");
+  }
   if (!supabase) {
     const completed = readLocal<string[]>("equalspace-completed-lessons", []);
     if (!writeLocal("equalspace-completed-lessons", [...new Set([...completed, slug])])) {
       return unavailable("Your browser could not save progress. Check its storage settings and try again.");
     }
+    if (quizScore !== undefined) {
+      const scores = readLocal<Record<string, number>>("equalspace-lesson-quiz-scores", {});
+      writeLocal("equalspace-lesson-quiz-scores", { ...scores, [slug]: quizScore });
+    }
+    notifyLessonComplete(slug);
     return { ok: true, mode: "demo", message: "Lesson marked complete on this device." };
   }
   try {
@@ -311,16 +336,32 @@ export async function markLessonComplete(slug: string): Promise<ServiceResponse>
       if (!writeLocal("equalspace-completed-lessons", [...new Set([...completed, slug])])) {
         return unavailable("Please sign in or enable browser storage to save your progress.");
       }
+      if (quizScore !== undefined) {
+        const scores = readLocal<Record<string, number>>("equalspace-lesson-quiz-scores", {});
+        writeLocal("equalspace-lesson-quiz-scores", { ...scores, [slug]: quizScore });
+      }
+      notifyLessonComplete(slug);
       return { ok: true, mode: "demo", message: "Lesson marked complete on this device. Sign in to sync progress." };
     }
-    const { error } = await supabase.from("user_progress").upsert({
-      user_id: user.id, lesson_slug: slug, completed: true, updated_at: new Date().toISOString()
-    }, { onConflict: "user_id,lesson_slug" });
-    return error
-      ? { ok: false, mode: "supabase", message: error.message }
-      : { ok: true, mode: "supabase", message: "Lesson marked complete." };
+    const progress = {
+      user_id: user.id,
+      lesson_slug: slug,
+      completed: true,
+      updated_at: new Date().toISOString(),
+      ...(quizScore === undefined ? {} : { quiz_score: quizScore })
+    };
+    const { error } = await supabase.from("user_progress").upsert(progress, { onConflict: "user_id,lesson_slug" });
+    if (error) return { ok: false, mode: "supabase", message: error.message };
+    notifyLessonComplete(slug);
+    return { ok: true, mode: "supabase", message: "Lesson marked complete." };
   } catch {
     return { ok: false, mode: "supabase", message: "Could not save your progress. Check your connection and try again." };
+  }
+}
+
+function notifyLessonComplete(slug: string) {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("equalspace-lesson-completed", { detail: slug }));
   }
 }
 

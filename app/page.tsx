@@ -8,6 +8,7 @@ import { FeatureCard } from "@/components/feature-card";
 import { SectionHeading } from "@/components/section-heading";
 import { StatCard } from "@/components/stat-card";
 import { lawResources, lessons } from "@/lib/data";
+import { stereotypeCategories, stereotypeExamples } from "@/lib/stereotypes";
 import { useState } from "react";
 
 const featureCards = [
@@ -21,7 +22,7 @@ const featureCards = [
 const statBlocks = [
   { label: "Learning modules", value: String(lessons.length), note: "Short lessons covering equality, roles, work, and communication." },
   { label: "Legal resources", value: String(lawResources.length), note: "References for exploring rights and protections." },
-  { label: "Interactive tools", value: "3", note: "A quiz, community poll, and moderated story space." },
+  { label: "Stereotype examples", value: String(stereotypeExamples.length), note: `Across ${stereotypeCategories.length} parts of everyday life.` },
   { label: "Start anywhere", value: "1 step", note: "Small shifts in thinking can create larger social change." }
 ];
 
@@ -54,7 +55,7 @@ export default function HomePage() {
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link href="/learn" className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-violet-200 transition hover:-translate-y-0.5 hover:shadow-violet-300 dark:shadow-violet-950/40">
+              <Link href="/stereotypes" className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-violet-200 transition hover:-translate-y-0.5 hover:shadow-violet-300 dark:shadow-violet-950/40">
                 Explore Stereotypes <ArrowRight size={18} />
               </Link>
               <Link href="/quiz" className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3.5 text-base font-semibold text-slate-700 transition hover:border-violet-200 hover:text-violet-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
