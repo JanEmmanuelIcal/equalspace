@@ -1,7 +1,7 @@
 "use client";
 
-import { FormEvent, useState } from "react";
 import Link from "next/link";
+import { FormEvent, useState } from "react";
 import { requestPasswordReset } from "@/lib/supabase";
 
 export function ForgotPasswordForm() {
@@ -22,11 +22,11 @@ export function ForgotPasswordForm() {
   };
 
   return (
-    <div className="mx-auto max-w-md px-4 py-16 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-md px-4 py-8 sm:px-6 lg:px-8">
       <div className="rounded-[30px] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <h1 className="text-center text-3xl font-black text-slate-900 dark:text-white">Reset password</h1>
         <p className="mt-2 text-center text-sm text-slate-600 dark:text-slate-300">Enter your email and we will send a password reset link.</p>
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+        <form onSubmit={handleSubmit} className="mt-5 space-y-4">
           <div>
             <label htmlFor="reset-email" className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">Email</label>
             <input id="reset-email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-violet-400 dark:border-slate-700 dark:bg-slate-950" placeholder="you@example.com" />

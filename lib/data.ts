@@ -462,6 +462,94 @@ export const quizQuestions: QuizQuestion[] = [
     explanation: "Career choices should reflect interests, skills, and support rather than assumptions tied to gender.",
     source: "ILO",
     category: "Workplace"
+  },
+  {
+    question: "Household chores and caregiving can be shared by people of every gender.",
+    options: ["Stereotype", "Fact", "Not sure"],
+    answer: "Fact",
+    explanation: "Care work is valuable work, and sharing it fairly supports equal participation at home and beyond.",
+    source: "International Labour Organization",
+    category: "Gender Roles"
+  },
+  {
+    question: "A hiring decision should be based on role-related skills and evidence, not gender assumptions.",
+    options: ["Stereotype", "Fact", "Not sure"],
+    answer: "Fact",
+    explanation: "Consistent, job-related criteria help make recruitment fairer and reduce the influence of bias.",
+    source: "International Labour Organization",
+    category: "Workplace"
+  },
+  {
+    question: "A boy who wants to work in early childhood education should be discouraged because caregiving is women's work.",
+    options: ["Stereotype", "Fact", "Not sure"],
+    answer: "Stereotype",
+    explanation: "Caregiving ability is not limited to one gender, and people should be able to pursue work suited to their interests and skills.",
+    source: "UN Women",
+    category: "Education"
+  },
+  {
+    question: "People doing work of equal value should receive fair pay regardless of gender.",
+    options: ["Stereotype", "Fact", "Not sure"],
+    answer: "Fact",
+    explanation: "Equal remuneration for work of equal value is a core principle of workplace equality.",
+    source: "International Labour Organization",
+    category: "Workplace"
+  },
+  {
+    question: "Girls and boys should both be encouraged to explore science, technology, arts, and care-related subjects.",
+    options: ["Stereotype", "Fact", "Not sure"],
+    answer: "Fact",
+    explanation: "Offering the same encouragement broadens choices and helps learners follow their abilities and interests.",
+    source: "UNESCO",
+    category: "Education"
+  },
+  {
+    question: "A person who speaks confidently is naturally a better leader because of their gender.",
+    options: ["Stereotype", "Fact", "Not sure"],
+    answer: "Stereotype",
+    explanation: "Leadership cannot be inferred from gender; it depends on a range of skills, experience, and circumstances.",
+    source: "World Economic Forum",
+    category: "Workplace"
+  },
+  {
+    question: "Using respectful language and a person's stated name helps make communication more inclusive.",
+    options: ["Stereotype", "Fact", "Not sure"],
+    answer: "Fact",
+    explanation: "Respectful language recognizes people's dignity and helps create safer, more inclusive environments.",
+    source: "United Nations Free & Equal",
+    category: "Communication"
+  },
+  {
+    question: "A single person's experience proves that gender bias no longer exists.",
+    options: ["Stereotype", "Fact", "Not sure"],
+    answer: "Stereotype",
+    explanation: "Individual experiences vary, so understanding barriers requires looking at broader patterns and evidence rather than assuming one story represents everyone.",
+    source: "UN Women",
+    category: "Gender Equality"
+  },
+  {
+    question: "Schools can help challenge stereotypes by giving every learner equal chances to participate and lead.",
+    options: ["Stereotype", "Fact", "Not sure"],
+    answer: "Fact",
+    explanation: "Fair opportunities in classrooms help learners develop skills without being limited by gender expectations.",
+    source: "UNESCO",
+    category: "Education"
+  },
+  {
+    question: "Taking parental leave and sharing family care are responsibilities that can involve parents of every gender.",
+    options: ["Stereotype", "Fact", "Not sure"],
+    answer: "Fact",
+    explanation: "Care policies and shared responsibilities can support families and help distribute unpaid care more fairly.",
+    source: "International Labour Organization",
+    category: "Gender Roles"
+  },
+  {
+    question: "Only women should be expected to take notes and organize materials during group work.",
+    options: ["Stereotype", "Fact", "Not sure"],
+    answer: "Stereotype",
+    explanation: "Assigning routine support tasks by gender reinforces unequal expectations; responsibilities should be shared fairly.",
+    source: "UNESCO",
+    category: "Education"
   }
 ];
 

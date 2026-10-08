@@ -31,11 +31,11 @@ export default function UpdatePasswordPage() {
   };
 
   return (
-    <div className="mx-auto max-w-md px-4 py-16 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-md px-4 py-8 sm:px-6 lg:px-8">
       <div className="rounded-[30px] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <h1 className="text-center text-3xl font-black text-slate-900 dark:text-white">Choose a new password</h1>
         <p className="mt-2 text-center text-sm text-slate-600 dark:text-slate-300">Use at least 8 characters to secure your account.</p>
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+        <form onSubmit={handleSubmit} className="mt-5 space-y-4">
           <div>
             <label htmlFor="new-password" className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">New password</label>
             <input id="new-password" type="password" autoComplete="new-password" minLength={8} required value={password} onChange={(event) => setPassword(event.target.value)} className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-violet-400 dark:border-slate-700 dark:bg-slate-950" />

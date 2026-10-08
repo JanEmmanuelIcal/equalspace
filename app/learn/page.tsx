@@ -16,8 +16,8 @@ export default async function LearnPage({ searchParams }: { searchParams: Promis
     : lessons;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <div className="rounded-[36px] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:p-8">
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="rounded-[36px] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:p-7">
         <SectionHeading
           eyebrow="Learning center"
           title="Learn with clarity and empathy"
@@ -29,7 +29,7 @@ export default async function LearnPage({ searchParams }: { searchParams: Promis
           <Link href="/learn" className="font-semibold underline underline-offset-4">Clear search</Link>
         </div>}
 
-        <div className="mt-8 flex flex-wrap items-center gap-3 text-sm">
+        <div className="mt-6 flex flex-wrap items-center gap-3 text-sm">
           {[
             "Gender Stereotypes",
             "Gender Equality",
@@ -45,7 +45,7 @@ export default async function LearnPage({ searchParams }: { searchParams: Promis
         </div>
       </div>
 
-      <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-7 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
         {filteredLessons.map((lesson) => (
           <LessonCard key={lesson.slug} lesson={lesson} />
         ))}

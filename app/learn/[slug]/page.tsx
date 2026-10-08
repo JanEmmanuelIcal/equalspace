@@ -32,13 +32,13 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ s
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
-      <Link href="/learn" className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-violet-600 dark:text-violet-300">
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+      <Link href="/learn" className="mb-5 inline-flex items-center gap-2 text-sm font-semibold text-violet-600 dark:text-violet-300">
         <ArrowLeft size={16} /> Back to learning center
       </Link>
 
       <article className="overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <div className="relative h-56 overflow-hidden bg-gradient-to-br from-violet-100 via-sky-100 to-emerald-100 dark:from-violet-950/40 dark:via-sky-950/40 dark:to-emerald-950/40">
+        <div className="relative h-44 overflow-hidden bg-gradient-to-br from-violet-100 via-sky-100 to-emerald-100 dark:from-violet-950/40 dark:via-sky-950/40 dark:to-emerald-950/40">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.8),_transparent_32%)]" />
           <div className="absolute left-8 top-8 rounded-full bg-white/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-700">
             {lesson.category}
@@ -47,7 +47,7 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ s
           <div className="absolute bottom-10 right-12 h-20 w-20 rounded-full bg-violet-200/70 blur-2xl" />
         </div>
 
-        <div className="space-y-8 p-6 lg:p-10">
+        <div className="space-y-6 p-5 lg:p-8">
           <header>
             <div className="mb-4 flex flex-wrap items-center gap-4 text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
               <span className="inline-flex items-center gap-2"><BookOpenText size={14} /> {lesson.difficulty}</span>
@@ -63,7 +63,7 @@ export default async function LessonDetailPage({ params }: { params: Promise<{ s
             Finish with a 10-question, 5-stage quiz <span aria-hidden="true">↓</span>
           </Link>
 
-          <div className="space-y-8">
+          <div className="space-y-6">
             {lesson.content.map((section) => (
               <section key={section.heading} className="space-y-3">
                 <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{section.heading}</h2>

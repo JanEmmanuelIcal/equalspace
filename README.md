@@ -12,7 +12,7 @@ EqualSpace is a modern gender-awareness and equality platform for students and t
 - Law and resource library with official references
 - User dashboard and progress tracking
 - Role-checked admin dashboard screens (content-management controls remain prototype UI)
-- Supabase cookie-backed authentication and row-level security setup
+- Supabase password login, OTP-confirmed account creation, and row-level security setup
 - Local browser-only demo storage for poll responses, stories, quiz attempts, and lesson progress
 
 ## Tech Stack
@@ -62,8 +62,9 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 1. Create a new Supabase project.
 2. Enable authentication and set up a public schema.
 3. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` to `.env.local`. `NEXT_PUBLIC_SUPABASE_ANON_KEY` is accepted for older projects.
-4. Enable email/password authentication and allow your app origin in Supabase Auth redirect URLs.
-5. Run `supabase/schema.sql` in the Supabase SQL Editor for a new project. For a database that already has this schema, apply and verify the changed policies and grants separately; this repository does not yet include versioned migrations.
+4. Enable email authentication, enable **Confirm Email**, and allow your app origin plus the `/update-password` redirect in Supabase Auth URL configuration.
+5. In **Authentication → Email Templates → Confirm signup**, include `{{ .Token }}` so new accounts receive a six-digit confirmation code. OTP is only used to confirm account creation; users log in with their email and password. Keep the password recovery email configured to send a reset link.
+6. Run `supabase/schema.sql` in the Supabase SQL Editor for a new project. For a database that already has this schema, apply and verify the changed policies and grants separately; this repository does not yet include versioned migrations.
 
 ## Database Migration
 

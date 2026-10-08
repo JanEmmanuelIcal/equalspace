@@ -61,17 +61,13 @@ const generateId = () => {
 
 export async function signInWithEmail(email: string, password: string): Promise<ServiceResponse> {
   const trimmedEmail = email.trim();
-  const trimmedPassword = password.trim();
-
-  if (!trimmedEmail || !trimmedPassword) {
+  if (!trimmedEmail || !password) {
     return { ok: false, mode: "demo", message: "Please enter both email and password." };
   }
-
-  if (!supabase) return unavailable("Sign-in is unavailable until Supabase is configured. Your credentials were not sent anywhere.");
+  if (!supabase) return unavailable("Sign-in is unavailable until Supabase is configured.");
 
   try {
-    const { error } = await supabase.auth.signInWithPassword({ email: trimmedEmail, password: trimmedPassword });
-
+    const { error } = await supabase.auth.signInWithPassword({ email: trimmedEmail, password });
     if (error) return { ok: false, mode: "supabase", message: error.message };
     return { ok: true, mode: "supabase", message: "Signed in successfully." };
   } catch {
@@ -79,34 +75,67 @@ export async function signInWithEmail(email: string, password: string): Promise<
   }
 }
 
-export async function signUpWithEmail(email: string, password: string, fullName?: string): Promise<ServiceResponse> {
+export async function requestAccountCreationOtp(email: string, password: string, fullName: string): Promise<ServiceResponse> {
   const trimmedEmail = email.trim();
-  const trimmedPassword = password.trim();
+  const trimmedName = fullName.trim();
 
-  if (!trimmedEmail || !trimmedPassword) {
-    return { ok: false, mode: "demo", message: "Please provide an email and password." };
+  if (!trimmedEmail || !trimmedName || !password) {
+    return { ok: false, mode: "demo", message: "Please enter your name, email, and password." };
   }
-
+  if (password.length < 8) return { ok: false, mode: "demo", message: "Your password must be at least 8 characters." };
   if (!supabase) return unavailable("Account creation is unavailable until Supabase is configured.");
 
   try {
     const { data, error } = await supabase.auth.signUp({
       email: trimmedEmail,
-      password: trimmedPassword,
-      options: {
-        data: { full_name: fullName?.trim() || "EqualSpace member" },
-        emailRedirectTo: `${window.location.origin}/login`
-      }
+      password,
+      options: { data: { full_name: trimmedName } }
     });
 
     if (error) return { ok: false, mode: "supabase", message: error.message };
-    return {
-      ok: true,
-      mode: "supabase",
-      message: data.session ? "Account created and signed in." : "Account created. Check your email to confirm your address before signing in."
-    };
+    if (data.session) {
+      const { error: signOutError } = await supabase.auth.signOut();
+      if (signOutError) {
+        return { ok: false, mode: "supabase", message: `Email confirmation is disabled and sign-out failed: ${signOutError.message}` };
+      }
+      return {
+        ok: false,
+        mode: "supabase",
+        message: "Email confirmation is disabled in Supabase. Enable Confirm Email so new accounts must verify the code before logging in."
+      };
+    }
+    return { ok: true, mode: "supabase", message: "A 6-digit account confirmation code has been sent to your email." };
   } catch {
-    return { ok: false, mode: "supabase", message: "Could not connect. Check your connection and try again." };
+    return { ok: false, mode: "supabase", message: "Could not create your account. Check your connection and try again." };
+  }
+}
+
+export async function verifyAccountCreationOtp(email: string, token: string): Promise<ServiceResponse> {
+  const trimmedEmail = email.trim();
+  const trimmedToken = token.trim();
+
+  if (!trimmedEmail || !/^\d{6}$/.test(trimmedToken)) {
+    return { ok: false, mode: "demo", message: "Enter your email address and the 6-digit confirmation code." };
+  }
+  if (!supabase) return unavailable("Account confirmation is unavailable until Supabase is configured.");
+
+  try {
+    const { data, error } = await supabase.auth.verifyOtp({
+      email: trimmedEmail,
+      token: trimmedToken,
+      type: "signup"
+    });
+
+    if (error) return { ok: false, mode: "supabase", message: error.message };
+    if (data.session) {
+      const { error: signOutError } = await supabase.auth.signOut();
+      if (signOutError) {
+        return { ok: false, mode: "supabase", message: `Your email was confirmed, but sign-out failed: ${signOutError.message}` };
+      }
+    }
+    return { ok: true, mode: "supabase", message: "Email confirmed. Your account is ready. Log in with your email and password." };
+  } catch {
+    return { ok: false, mode: "supabase", message: "Could not verify the code. Check your connection and try again." };
   }
 }
 
