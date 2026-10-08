@@ -3,6 +3,11 @@ import { copyProxyCookies, createSupabaseProxyClient } from "@/lib/supabase/serv
 
 const protectedPrefixes = ["/dashboard", "/profile", "/progress", "/admin"];
 
+function preventCaching(response: NextResponse) {
+  response.headers.set("Cache-Control", "private, no-store, max-age=0");
+  return response;
+}
+
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const requiresAuth = protectedPrefixes.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
@@ -10,11 +15,11 @@ export async function proxy(request: NextRequest) {
 
   const supabaseContext = createSupabaseProxyClient(request);
   if (!supabaseContext) {
-    if (!pathname.startsWith("/admin")) return NextResponse.next({ request });
     const destination = request.nextUrl.clone();
     destination.pathname = "/login";
     destination.searchParams.set("notice", "auth-unavailable");
-    return NextResponse.redirect(destination);
+    destination.searchParams.set("next", `${pathname}${request.nextUrl.search}`);
+    return preventCaching(NextResponse.redirect(destination));
   }
 
   const { client, getResponse } = supabaseContext;
@@ -23,8 +28,8 @@ export async function proxy(request: NextRequest) {
   if (error || !claims?.sub) {
     const destination = request.nextUrl.clone();
     destination.pathname = "/login";
-    destination.searchParams.set("next", pathname);
-    return copyProxyCookies(getResponse(), NextResponse.redirect(destination));
+    destination.searchParams.set("next", `${pathname}${request.nextUrl.search}`);
+    return preventCaching(copyProxyCookies(getResponse(), NextResponse.redirect(destination)));
   }
 
   if (pathname === "/admin" || pathname.startsWith("/admin/")) {
@@ -38,11 +43,11 @@ export async function proxy(request: NextRequest) {
       const destination = request.nextUrl.clone();
       destination.pathname = "/dashboard";
       destination.search = "";
-      return copyProxyCookies(getResponse(), NextResponse.redirect(destination));
+      return preventCaching(copyProxyCookies(getResponse(), NextResponse.redirect(destination)));
     }
   }
 
-  return getResponse();
+  return preventCaching(getResponse());
 }
 
 export const config = {

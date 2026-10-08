@@ -24,7 +24,14 @@ export function LoginForm() {
       if (result.ok) {
         setEmail("");
         setPassword("");
-        router.push("/dashboard");
+        const requestedPath = new URLSearchParams(window.location.search).get("next");
+        const destination = requestedPath?.startsWith("/") && !requestedPath.startsWith("//")
+          ? new URL(requestedPath, window.location.origin)
+          : null;
+        const redirectPath = destination?.origin === window.location.origin
+          ? `${destination.pathname}${destination.search}${destination.hash}`
+          : "/dashboard";
+        router.replace(redirectPath);
         router.refresh();
       }
     } finally {

@@ -1,10 +1,10 @@
-import { EmailOtpForm } from "@/components/email-otp-form";
+import { RegisterForm } from "@/components/register-form";
 
 export const metadata = {
   title: "Create account | EqualSpace",
-  description: "Create an EqualSpace account and confirm your email with a one-time code."
+  description: "Create an EqualSpace account with your email and password."
 };
 
 export default function RegisterPage() {
-  return <EmailOtpForm />;
+  return <RegisterForm />;
 }

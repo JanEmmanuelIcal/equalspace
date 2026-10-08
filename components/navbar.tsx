@@ -47,6 +47,8 @@ export function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [logoutError, setLogoutError] = useState("");
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
@@ -74,10 +76,27 @@ export function Navbar() {
   };
 
   const handleSignOut = async () => {
-    await supabase?.auth.signOut();
-    setUserEmail(null);
-    router.push("/");
-    router.refresh();
+    if (!supabase) {
+      setLogoutError("Sign out is unavailable because Supabase is not configured.");
+      return;
+    }
+
+    setIsSigningOut(true);
+    setLogoutError("");
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        setLogoutError("Could not sign out. Please try again.");
+        return;
+      }
+      setUserEmail(null);
+      router.replace("/login");
+      router.refresh();
+    } catch {
+      setLogoutError("Could not sign out. Check your connection and try again.");
+    } finally {
+      setIsSigningOut(false);
+    }
   };
 
   return (
@@ -117,8 +136,10 @@ export function Navbar() {
           <button aria-label="Search lessons" aria-expanded={searchOpen} onClick={() => setSearchOpen((value) => !value)} className="rounded-full border border-slate-200 bg-white p-2 text-slate-600 hover:border-violet-200 hover:text-violet-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
             <Search size={18} />
           </button>
-          {userEmail ? <><Link href="/dashboard" className="text-sm font-semibold text-slate-700 hover:text-violet-600 dark:text-slate-200">Dashboard</Link><button onClick={handleSignOut} className="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-violet-300 dark:border-slate-700 dark:text-slate-200">Sign out</button></> : <Link href="/login" className="rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-violet-200 transition hover:translate-y-[-1px] dark:shadow-violet-950/40">Log in</Link>}
+          {userEmail ? <><Link href="/dashboard" className="text-sm font-semibold text-slate-700 hover:text-violet-600 dark:text-slate-200">Dashboard</Link><button onClick={handleSignOut} disabled={isSigningOut} className="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-violet-300 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:text-slate-200">{isSigningOut ? "Signing out..." : "Sign out"}</button></> : <Link href="/login" className="rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-violet-200 transition hover:translate-y-[-1px] dark:shadow-violet-950/40">Log in</Link>}
         </div>
+
+        {logoutError && <p role="alert" className="mx-auto max-w-7xl px-4 pb-3 text-sm text-rose-600 dark:text-rose-300 sm:px-6 lg:px-8">{logoutError}</p>}
 
         <div className="flex items-center gap-2 md:hidden">
           <button aria-label="Search lessons" aria-expanded={searchOpen} onClick={() => setSearchOpen((value) => !value)} className="rounded-full border border-slate-200 p-2 text-slate-700 dark:border-slate-700 dark:text-slate-200"><Search size={18} /></button>
@@ -165,7 +186,7 @@ export function Navbar() {
                   {darkMode ? <Sun size={16} /> : <Moon size={16} />}
                   {darkMode ? "Light" : "Dark"} mode
                 </button>
-                {userEmail ? <><Link href="/dashboard" onClick={() => setMenuOpen(false)} className="rounded-full bg-violet-600 px-4 py-2 font-semibold text-white">Dashboard</Link><button onClick={handleSignOut} className="rounded-full border border-slate-200 px-4 py-2 font-semibold dark:border-slate-700">Sign out</button></> : <Link href="/login" className="rounded-full bg-violet-600 px-4 py-2 font-semibold text-white">Log in</Link>}
+                {userEmail ? <><Link href="/dashboard" onClick={() => setMenuOpen(false)} className="rounded-full bg-violet-600 px-4 py-2 font-semibold text-white">Dashboard</Link><button onClick={handleSignOut} disabled={isSigningOut} className="rounded-full border border-slate-200 px-4 py-2 font-semibold disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700">{isSigningOut ? "Signing out..." : "Sign out"}</button></> : <Link href="/login" className="rounded-full bg-violet-600 px-4 py-2 font-semibold text-white">Log in</Link>}
               </div>
             </nav>
           </motion.div>

@@ -12,7 +12,7 @@ EqualSpace is a modern gender-awareness and equality platform for students and t
 - Law and resource library with official references
 - User dashboard and progress tracking
 - Role-checked admin dashboard screens (content-management controls remain prototype UI)
-- Supabase password login, OTP-confirmed account creation, and row-level security setup
+- Supabase email/password registration and login, protected routes, and row-level security setup
 - Local browser-only demo storage for poll responses, stories, quiz attempts, and lesson progress
 
 ## Tech Stack
@@ -62,14 +62,14 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 1. Create a new Supabase project.
 2. Enable authentication and set up a public schema.
 3. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` to `.env.local`. `NEXT_PUBLIC_SUPABASE_ANON_KEY` is accepted for older projects.
-4. Enable email authentication, enable **Confirm Email**, and allow your app origin plus the `/update-password` redirect in Supabase Auth URL configuration.
-5. In **Authentication → Email Templates → Confirm signup**, include `{{ .Token }}` so new accounts receive a six-digit confirmation code. OTP is only used to confirm account creation; users log in with their email and password. Keep the password recovery email configured to send a reset link.
-6. For email delivery, configure custom SMTP under **Authentication → SMTP Settings**. Supabase's default mail service only sends to project team addresses and is limited to 2 emails per hour. During testing, check the Supabase Auth logs for delivery errors and check the recipient's spam folder.
+4. Enable email/password authentication, disable **Confirm Email** so signup does not require email verification, and allow your app origin plus the `/update-password` redirect in Supabase Auth URL configuration.
+5. Keep the password recovery email configured. Signup does not send an OTP or confirmation email; password reset still uses email delivery.
+6. For password reset email delivery, configure custom SMTP under **Authentication → SMTP Settings**. Supabase's default mail service only sends to project team addresses and is limited to 2 emails per hour.
 7. Run `supabase/schema.sql` in the Supabase SQL Editor for a new project. For a database that already has this schema, apply and verify the changed policies and grants separately; this repository does not yet include versioned migrations.
 
 ## Database Migration
 
-The schema includes `profiles`, `lessons`, `quiz_questions`, `quiz_attempts`, `poll_responses`, `stories`, `laws`, and `user_progress`. Profile roles must be assigned through a trusted administrative database channel; users cannot promote themselves. Admin routes fail closed unless Supabase is configured and the authenticated profile has the `admin` role. The admin data-management pages are still prototype screens and must be connected to secured database CRUD operations before production use.
+The schema includes `profiles`, `lessons`, `quiz_questions`, `quiz_attempts`, `poll_responses`, `stories`, `laws`, and `user_progress`. New profiles are associated with the Supabase Auth user ID. Profile roles must be assigned through a trusted administrative database channel; users cannot promote themselves. Protected routes fail closed unless Supabase is configured; admin routes additionally require the authenticated profile to have the `admin` role. The admin data-management pages are still prototype screens and must be connected to secured database CRUD operations before production use.
 
 Without Supabase configuration, community submissions and learning progress are stored only in the current browser. They are not shared with other users or devices, and real authentication and admin access are unavailable.
 
