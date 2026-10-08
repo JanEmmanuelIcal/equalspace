@@ -38,29 +38,34 @@ export default function HomePage() {
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="grid items-center gap-8 rounded-[36px] border border-slate-200 bg-white/80 p-6 shadow-[0_20px_70px_rgba(15,23,42,0.06)] backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/80 lg:grid-cols-[1.05fr_0.95fr] lg:p-10"
+          className="relative isolate grid items-center gap-8 overflow-hidden rounded-[36px] border border-violet-950 bg-[#171329] p-6 text-white shadow-[0_28px_90px_rgba(35,26,76,0.2)] sm:p-8 lg:grid-cols-[1.05fr_0.95fr] lg:p-12"
         >
-          <div>
-            <p className="mb-4 inline-flex items-center rounded-full border border-violet-200 bg-violet-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-violet-700 dark:border-violet-900 dark:bg-violet-950/40 dark:text-violet-200">
-              Equality begins with awareness
+          <div aria-hidden="true" className="absolute -right-28 -top-40 -z-10 h-[32rem] w-[32rem] rounded-full border border-white/10 bg-violet-500/10 blur-[1px]" />
+          <div aria-hidden="true" className="absolute -bottom-72 left-[38%] -z-10 h-[34rem] w-[34rem] rounded-full border border-fuchsia-200/10" />
+          <div className="relative z-10">
+            <p className="mb-5 inline-flex items-center rounded-full border border-violet-200/20 bg-white/5 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-violet-200">
+              Learn with clarity and empathy
             </p>
-            <h1 className="max-w-xl text-4xl font-black leading-[0.97] tracking-[-0.06em] text-slate-900 dark:text-white sm:text-5xl lg:text-[5rem]">
-              Challenge the
-              <span className="block text-slate-800 dark:text-slate-100">stereotype.</span>
-              Understand the issue.
-              <span className="block text-violet-600 dark:text-violet-300">Create change.</span>
+            <h1 className="max-w-2xl text-4xl font-black leading-[1.02] tracking-[-0.055em] sm:text-5xl lg:text-[4.4rem]">
+              Make room for
+              <span className="block bg-gradient-to-r from-violet-200 via-fuchsia-200 to-sky-200 bg-clip-text text-transparent">every possibility.</span>
             </h1>
-            <p className="mt-6 max-w-lg text-lg leading-8 text-slate-600 dark:text-slate-300">
-              Explore how gender expectations influence education, careers, relationships, and everyday life.
+            <p className="mt-6 max-w-lg text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
+              Challenge stereotypes, explore lived experiences, and learn how fairness can shape a more inclusive everyday life.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link href="/stereotypes" className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-violet-200 transition hover:-translate-y-0.5 hover:shadow-violet-300 dark:shadow-violet-950/40">
-                Explore Stereotypes <ArrowRight size={18} />
+              <Link href="/learn" className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-base font-bold text-violet-950 shadow-lg shadow-black/15 transition hover:-translate-y-0.5 hover:bg-violet-100">
+                Start learning <ArrowRight size={18} />
               </Link>
-              <Link href="/quiz" className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-3.5 text-base font-semibold text-slate-700 transition hover:border-violet-200 hover:text-violet-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
-                Take the Quiz
+              <Link href="/stereotypes" className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-6 py-3.5 text-base font-semibold text-white transition hover:border-white/30 hover:bg-white/10">
+                Explore stereotypes
               </Link>
+            </div>
+            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 border-t border-white/10 pt-5 text-xs font-medium text-slate-300">
+              <span className="inline-flex items-center gap-2"><BookOpenText size={15} className="text-violet-300" /> {lessons.length} guided lessons</span>
+              <span className="inline-flex items-center gap-2"><CircleHelp size={15} className="text-sky-300" /> Quick, thoughtful quizzes</span>
+              <span className="inline-flex items-center gap-2"><ShieldCheck size={15} className="text-emerald-300" /> Trusted resources</span>
             </div>
           </div>
 
@@ -68,27 +73,16 @@ export default function HomePage() {
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="relative"
+            className="relative z-10"
           >
-            <div className="relative overflow-hidden rounded-[32px] border border-slate-200 bg-gradient-to-br from-violet-50 via-sky-50 to-emerald-50 p-5 dark:border-slate-800 dark:from-violet-950/25 dark:via-slate-900 dark:to-emerald-950/20">
-              <div className="absolute -left-10 top-10 h-32 w-32 rounded-full bg-violet-200/40 blur-3xl" />
-              <div className="absolute -right-5 bottom-8 h-28 w-28 rounded-full bg-emerald-200/40 blur-3xl" />
-              <Image src="/images/hero/group-learning.svg" width={640} height={480} alt="A diverse group learning together" className="relative mx-auto h-auto w-full max-w-xl drop-shadow-sm" priority />
-              <div className="relative mt-2 rounded-[28px] border border-white/80 bg-white/80 p-4 shadow-lg backdrop-blur-sm dark:border-slate-700 dark:bg-slate-900/70">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-600 dark:text-violet-300">Different paths. Equal opportunity.</p>
-                <div className="mt-4 flex items-center justify-between gap-3">
-                  <div className="flex -space-x-2">
-                    {[
-                      "bg-violet-400",
-                      "bg-sky-400",
-                      "bg-emerald-400",
-                      "bg-amber-300"
-                    ].map((color) => (
-                      <div key={color} className={`h-9 w-9 rounded-full border-2 border-white ${color}`} />
-                    ))}
-                  </div>
-                  <div className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-200">Inclusive learning</div>
-                </div>
+            <div className="relative rounded-[32px] border border-white/50 bg-gradient-to-br from-violet-100 via-sky-50 to-emerald-50 p-3 shadow-[0_25px_70px_rgba(5,4,20,0.35)] sm:p-4">
+              <Image src="/images/hero/group-learning.svg" width={640} height={480} alt="A diverse group learning together" className="relative mx-auto h-auto w-full rounded-[24px] drop-shadow-sm" priority />
+              <div className="absolute -bottom-4 -left-3 rounded-2xl border border-white/70 bg-white/90 px-4 py-3 shadow-xl backdrop-blur sm:-left-7">
+                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">A better perspective</p>
+                <p className="mt-1 text-sm font-bold text-slate-900">Starts with a question.</p>
+              </div>
+              <div className="absolute -right-2 top-5 rounded-full border border-white/70 bg-white/90 px-3 py-2 text-xs font-bold text-emerald-800 shadow-lg sm:-right-5">
+                Built on respect <span aria-hidden="true">✦</span>
               </div>
             </div>
           </motion.div>

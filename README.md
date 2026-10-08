@@ -13,6 +13,7 @@ EqualSpace is a modern gender-awareness and equality platform for students and t
 - User dashboard and progress tracking
 - Role-checked admin dashboard screens (content-management controls remain prototype UI)
 - Supabase email/password registration and login, protected routes, and row-level security setup
+- Printable topic certificates for perfect lesson quiz scores
 - Local browser-only demo storage for poll responses, stories, quiz attempts, and lesson progress
 
 ## Tech Stack
@@ -61,15 +62,15 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 1. Create a new Supabase project.
 2. Enable authentication and set up a public schema.
-3. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` to `.env.local`. `NEXT_PUBLIC_SUPABASE_ANON_KEY` is accepted for older projects.
-4. Enable email/password authentication, disable **Confirm Email** so signup does not require email verification, and allow your app origin plus the `/update-password` redirect in Supabase Auth URL configuration.
-5. Keep the password recovery email configured. Signup does not send an OTP or confirmation email; password reset still uses email delivery.
+3. Add `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `NEXT_PUBLIC_APP_URL` to `.env.local`. Set `NEXT_PUBLIC_APP_URL` to the app's canonical public URL (for example, `https://equalspace.example.com`); `NEXT_PUBLIC_SUPABASE_ANON_KEY` is accepted for older projects.
+4. Enable email/password authentication, disable **Confirm Email** so signup does not require email verification, set the Supabase **Site URL** to your canonical public app URL, and add that URL plus `/reset-password` to the allowed redirect URLs.
+5. Keep the password recovery email configured. Forgot-password emails are sent by Supabase and redirect to the production `/reset-password` page. Signup does not send a confirmation email.
 6. For password reset email delivery, configure custom SMTP under **Authentication → SMTP Settings**. Supabase's default mail service only sends to project team addresses and is limited to 2 emails per hour.
 7. Run `supabase/schema.sql` in the Supabase SQL Editor for a new project. For a database that already has this schema, apply and verify the changed policies and grants separately; this repository does not yet include versioned migrations.
 
 ## Database Migration
 
-The schema includes `profiles`, `lessons`, `quiz_questions`, `quiz_attempts`, `poll_responses`, `stories`, `laws`, and `user_progress`. New profiles are associated with the Supabase Auth user ID. Profile roles must be assigned through a trusted administrative database channel; users cannot promote themselves. Protected routes fail closed unless Supabase is configured; admin routes additionally require the authenticated profile to have the `admin` role. The admin data-management pages are still prototype screens and must be connected to secured database CRUD operations before production use.
+The schema includes `profiles`, `lessons`, `quiz_questions`, `quiz_attempts`, `poll_responses`, `stories`, `laws`, and `user_progress`. New profiles are associated with the Supabase Auth user ID. Topic quiz scores keep the learner's best result so a perfect score and its printable certificate remain available on return. Profile roles must be assigned through a trusted administrative database channel; users cannot promote themselves. Protected routes fail closed unless Supabase is configured; admin routes additionally require the authenticated profile to have the `admin` role. The admin data-management pages are still prototype screens and must be connected to secured database CRUD operations before production use.
 
 Without Supabase configuration, community submissions and learning progress are stored only in the current browser. They are not shared with other users or devices, and real authentication and admin access are unavailable.
 

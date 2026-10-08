@@ -28,6 +28,8 @@ export type StoryEntry = {
 export type ProfileData = { full_name: string; bio: string; email: string };
 export type QuizAttempt = { score: number; total: number; created_at: string };
 
+const passwordResetRedirectUrl = "https://equalspace-icaljanemmanuel-9993s-projects.vercel.app/reset-password";
+
 const readLocal = <T,>(key: string, fallback: T): T => {
   if (typeof window === "undefined") return fallback;
   try {
@@ -137,13 +139,14 @@ export async function registerWithEmail(email: string, password: string, fullNam
 export async function requestPasswordReset(email: string): Promise<ServiceResponse> {
   const trimmedEmail = email.trim();
   if (!trimmedEmail) return unavailable("Please enter your email address.");
+  if (!isValidEmail(trimmedEmail)) return { ok: false, mode: "demo", message: "Enter a valid email address." };
   if (!supabase) return unavailable("Password recovery is unavailable until Supabase is configured.");
   try {
     const { error } = await supabase.auth.resetPasswordForEmail(trimmedEmail, {
-      redirectTo: `${window.location.origin}/update-password`
+      redirectTo: passwordResetRedirectUrl
     });
-    if (error) return { ok: false, mode: "supabase", message: error.message };
-    return { ok: true, mode: "supabase", message: "If an account exists for that address, a reset link is on its way." };
+    if (error) return { ok: false, mode: "supabase", message: "We could not send the reset email. Please check the address and try again." };
+    return { ok: true, mode: "supabase", message: "Password reset link has been sent to your email." };
   } catch {
     return { ok: false, mode: "supabase", message: "Could not connect. Check your connection and try again." };
   }
@@ -151,13 +154,20 @@ export async function requestPasswordReset(email: string): Promise<ServiceRespon
 
 export async function updatePassword(password: string): Promise<ServiceResponse> {
   if (!supabase) return unavailable("Password recovery is unavailable until Supabase is configured.");
+  if (password.length < 8) return { ok: false, mode: "supabase", message: "Choose a password with at least 8 characters." };
   try {
     const { error } = await supabase.auth.updateUser({ password });
-    return error
-      ? { ok: false, mode: "supabase", message: error.message }
-      : { ok: true, mode: "supabase", message: "Your password has been updated." };
+    if (!error) return { ok: true, mode: "supabase", message: "Password updated successfully." };
+    const message = error.message.toLowerCase();
+    if (message.includes("weak password") || message.includes("password should be")) {
+      return { ok: false, mode: "supabase", message: "Choose a stronger password that meets the password requirements." };
+    }
+    if (message.includes("session") || message.includes("jwt") || message.includes("token")) {
+      return { ok: false, mode: "supabase", message: "Your reset link is invalid or has expired. Request a new password reset link." };
+    }
+    return { ok: false, mode: "supabase", message: "We could not update your password. Please try again." };
   } catch {
-    return { ok: false, mode: "supabase", message: "Could not update your password. Request a new reset link and try again." };
+    return { ok: false, mode: "supabase", message: "Could not connect. Check your connection and try again." };
   }
 }
 
@@ -348,7 +358,7 @@ export async function markLessonComplete(slug: string, quizScore?: number): Prom
     }
     if (quizScore !== undefined) {
       const scores = readLocal<Record<string, number>>("equalspace-lesson-quiz-scores", {});
-      writeLocal("equalspace-lesson-quiz-scores", { ...scores, [slug]: quizScore });
+      writeLocal("equalspace-lesson-quiz-scores", { ...scores, [slug]: Math.max(scores[slug] ?? 0, quizScore) });
     }
     notifyLessonComplete(slug);
     return { ok: true, mode: "demo", message: "Lesson marked complete on this device." };
@@ -362,17 +372,30 @@ export async function markLessonComplete(slug: string, quizScore?: number): Prom
       }
       if (quizScore !== undefined) {
         const scores = readLocal<Record<string, number>>("equalspace-lesson-quiz-scores", {});
-        writeLocal("equalspace-lesson-quiz-scores", { ...scores, [slug]: quizScore });
+        writeLocal("equalspace-lesson-quiz-scores", { ...scores, [slug]: Math.max(scores[slug] ?? 0, quizScore) });
       }
       notifyLessonComplete(slug);
       return { ok: true, mode: "demo", message: "Lesson marked complete on this device. Sign in to sync progress." };
+    }
+    let bestQuizScore = quizScore;
+    if (quizScore !== undefined) {
+      const { data: previousProgress, error: progressError } = await supabase
+        .from("user_progress")
+        .select("quiz_score")
+        .eq("user_id", user.id)
+        .eq("lesson_slug", slug)
+        .maybeSingle();
+      if (progressError) return { ok: false, mode: "supabase", message: progressError.message };
+      if (typeof previousProgress?.quiz_score === "number") {
+        bestQuizScore = Math.max(previousProgress.quiz_score, quizScore);
+      }
     }
     const progress = {
       user_id: user.id,
       lesson_slug: slug,
       completed: true,
       updated_at: new Date().toISOString(),
-      ...(quizScore === undefined ? {} : { quiz_score: quizScore })
+      ...(bestQuizScore === undefined ? {} : { quiz_score: bestQuizScore })
     };
     const { error } = await supabase.from("user_progress").upsert(progress, { onConflict: "user_id,lesson_slug" });
     if (error) return { ok: false, mode: "supabase", message: error.message };

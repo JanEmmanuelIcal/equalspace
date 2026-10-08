@@ -31,7 +31,7 @@ export function ForgotPasswordForm() {
             <label htmlFor="reset-email" className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">Email</label>
             <input id="reset-email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none focus:border-violet-400 dark:border-slate-700 dark:bg-slate-950" placeholder="you@example.com" />
           </div>
-          {status && <p role="status" className={`text-sm ${status.ok ? "text-emerald-600 dark:text-emerald-300" : "text-rose-600 dark:text-rose-300"}`}>{status.message}</p>}
+          {status && <p role={status.ok ? "status" : "alert"} className={`text-sm ${status.ok ? "text-emerald-600 dark:text-emerald-300" : "text-rose-600 dark:text-rose-300"}`}>{status.message}</p>}
           <button disabled={isSubmitting} className="w-full rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-3 font-semibold text-white shadow-lg shadow-violet-200 disabled:opacity-60 dark:shadow-violet-950/40">
             {isSubmitting ? "Sending..." : "Send reset link"}
           </button>

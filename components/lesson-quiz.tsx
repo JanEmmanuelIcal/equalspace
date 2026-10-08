@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, RotateCcw, Sparkles } from "lucide-react";
 import { type LessonQuizQuestion, lessonQuizStagesCount } from "@/lib/data";
-import { markLessonComplete, saveQuizAttempt } from "@/lib/supabase";
+import { getLessonQuizScores, getProfile, markLessonComplete, saveQuizAttempt } from "@/lib/supabase";
+import { LessonCertificate } from "@/components/lesson-certificate";
 
 const QUESTIONS_PER_STAGE = 2;
 
@@ -19,6 +20,18 @@ export function LessonQuiz({ lessonTitle, lessonSlug, questions }: {
   const [isComplete, setIsComplete] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
+  const [hasCertificate, setHasCertificate] = useState(false);
+  const [learnerName, setLearnerName] = useState("EqualSpace Learner");
+
+  useEffect(() => {
+    let active = true;
+    void Promise.all([getLessonQuizScores(), getProfile()]).then(([scores, profile]) => {
+      if (!active) return;
+      setHasCertificate(scores[lessonSlug] === questions.length);
+      if (profile?.full_name.trim()) setLearnerName(profile.full_name.trim());
+    });
+    return () => { active = false; };
+  }, [lessonSlug, questions.length]);
 
   const currentQuestion = questions[questionIndex];
   const stage = Math.floor(questionIndex / QUESTIONS_PER_STAGE) + 1;
@@ -54,6 +67,7 @@ export function LessonQuiz({ lessonTitle, lessonSlug, questions }: {
 
     setIsSaving(true);
     const finalScore = score;
+    setHasCertificate((earned) => earned || finalScore === questions.length);
     try {
       const [attemptResult, progressResult] = await Promise.all([
         saveQuizAttempt(finalScore, questions.length),
@@ -81,6 +95,7 @@ export function LessonQuiz({ lessonTitle, lessonSlug, questions }: {
 
       <div className="p-5 sm:p-8">
         {!isComplete ? <>
+          {hasCertificate && <LessonCertificate lessonTitle={lessonTitle} questionCount={questions.length} learnerName={learnerName} onLearnerNameChange={setLearnerName} />}
           <ol aria-label="Quiz stages" className="grid grid-cols-5 gap-2">
             {stageResults.map((item, index) => {
               const isCurrent = index + 1 === stage;
@@ -139,6 +154,7 @@ export function LessonQuiz({ lessonTitle, lessonSlug, questions }: {
           <h3 className="mt-2 text-3xl font-black text-slate-900 dark:text-white">{score} / {questions.length}</h3>
           <p className="mt-2 text-slate-600 dark:text-slate-300">You made it through all five stages. Your score is saved with this lesson’s progress when storage is available.</p>
           {saveMessage && <p role="status" className="mx-auto mt-4 max-w-xl text-sm text-slate-500 dark:text-slate-400">{saveMessage}</p>}
+          {hasCertificate && <LessonCertificate lessonTitle={lessonTitle} questionCount={questions.length} learnerName={learnerName} onLearnerNameChange={setLearnerName} />}
           <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
             <button type="button" onClick={resetQuiz} className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:text-slate-200"><RotateCcw size={16} /> Try again</button>
             <Link href="/learn" className="inline-flex items-center justify-center gap-2 rounded-full bg-violet-600 px-5 py-3 text-sm font-semibold text-white hover:bg-violet-700"><Sparkles size={16} /> Choose another lesson</Link>

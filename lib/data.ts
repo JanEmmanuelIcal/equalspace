@@ -590,8 +590,8 @@ export const lawResources: LawResource[] = [
     explanation: "A comprehensive law promoting the welfare and empowerment of women in the Philippines, including protections against discrimination and barriers to equality.",
     category: "Women’s Rights",
     year: "2009",
-    source: "Official Gazette of the Philippines",
-    url: "https://www.officialgazette.gov.ph/2010/08/14/republic-act-no-9710/"
+    source: "The LawPhil Project",
+    url: "https://lawphil.net/statutes/repacts/ra2009/ra_9710_2009.html"
   },
   {
     id: "2",
@@ -599,8 +599,8 @@ export const lawResources: LawResource[] = [
     explanation: "Provides legal protection against sexual harassment in work, education, and training environments.",
     category: "Harassment",
     year: "1995",
-    source: "Official Gazette of the Philippines",
-    url: "https://www.officialgazette.gov.ph/1995/02/14/republic-act-no-7877/"
+    source: "The LawPhil Project",
+    url: "https://lawphil.net/statutes/repacts/ra1995/ra_7877_1995.html"
   },
   {
     id: "3",
@@ -608,8 +608,8 @@ export const lawResources: LawResource[] = [
     explanation: "Strengthens protections against gender-based harassment in public and private spaces, including online and community settings.",
     category: "Protection",
     year: "2019",
-    source: "Official Gazette of the Philippines",
-    url: "https://www.officialgazette.gov.ph/2019/07/17/republic-act-no-11313/"
+    source: "The LawPhil Project",
+    url: "https://lawphil.net/statutes/repacts/ra2019/ra_11313_2019.html"
   },
   {
     id: "4",
@@ -617,8 +617,8 @@ export const lawResources: LawResource[] = [
     explanation: "Sets the legal framework for fairness and non-discrimination in the workplace and supports equal opportunity protections.",
     category: "Workplace",
     year: "1974",
-    source: "Department of Labor and Employment",
-    url: "https://legacy.dole.gov.ph/"
+    source: "The LawPhil Project",
+    url: "https://lawphil.net/statutes/presdecs/pd1974/pd_442_1974.html"
   }
 ];
 

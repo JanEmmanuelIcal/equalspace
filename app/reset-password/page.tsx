@@ -5,6 +5,6 @@ export const metadata = {
   description: "Choose a new password for your EqualSpace account."
 };
 
-export default function UpdatePasswordPage() {
+export default function ResetPasswordPage() {
   return <ResetPasswordForm />;
 }
