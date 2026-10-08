@@ -139,6 +139,20 @@ export async function verifyAccountCreationOtp(email: string, token: string): Pr
   }
 }
 
+export async function resendAccountCreationOtp(email: string): Promise<ServiceResponse> {
+  const trimmedEmail = email.trim();
+  if (!trimmedEmail) return { ok: false, mode: "demo", message: "Please enter your email address." };
+  if (!supabase) return unavailable("Account confirmation is unavailable until Supabase is configured.");
+
+  try {
+    const { error } = await supabase.auth.resend({ type: "signup", email: trimmedEmail });
+    if (error) return { ok: false, mode: "supabase", message: error.message };
+    return { ok: true, mode: "supabase", message: "A new confirmation code was requested. Check your inbox and spam folder." };
+  } catch {
+    return { ok: false, mode: "supabase", message: "Could not resend the code. Check your connection and try again." };
+  }
+}
+
 export async function requestPasswordReset(email: string): Promise<ServiceResponse> {
   const trimmedEmail = email.trim();
   if (!trimmedEmail) return unavailable("Please enter your email address.");

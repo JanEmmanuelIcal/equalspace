@@ -64,7 +64,8 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 3. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` to `.env.local`. `NEXT_PUBLIC_SUPABASE_ANON_KEY` is accepted for older projects.
 4. Enable email authentication, enable **Confirm Email**, and allow your app origin plus the `/update-password` redirect in Supabase Auth URL configuration.
 5. In **Authentication → Email Templates → Confirm signup**, include `{{ .Token }}` so new accounts receive a six-digit confirmation code. OTP is only used to confirm account creation; users log in with their email and password. Keep the password recovery email configured to send a reset link.
-6. Run `supabase/schema.sql` in the Supabase SQL Editor for a new project. For a database that already has this schema, apply and verify the changed policies and grants separately; this repository does not yet include versioned migrations.
+6. For email delivery, configure custom SMTP under **Authentication → SMTP Settings**. Supabase's default mail service only sends to project team addresses and is limited to 2 emails per hour. During testing, check the Supabase Auth logs for delivery errors and check the recipient's spam folder.
+7. Run `supabase/schema.sql` in the Supabase SQL Editor for a new project. For a database that already has this schema, apply and verify the changed policies and grants separately; this repository does not yet include versioned migrations.
 
 ## Database Migration
 

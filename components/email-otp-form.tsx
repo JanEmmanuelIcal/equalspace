@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
-import { requestAccountCreationOtp, verifyAccountCreationOtp } from "@/lib/supabase";
+import { requestAccountCreationOtp, resendAccountCreationOtp, verifyAccountCreationOtp } from "@/lib/supabase";
 
 export function EmailOtpForm() {
   const [fullName, setFullName] = useState("");
@@ -52,7 +52,7 @@ export function EmailOtpForm() {
     setIsSubmitting(true);
     setStatus(null);
     try {
-      const result = await requestAccountCreationOtp(email, password, fullName);
+      const result = await resendAccountCreationOtp(email);
       setStatus(result);
     } finally {
       setIsSubmitting(false);
@@ -136,6 +136,9 @@ export function EmailOtpForm() {
                 Resend code
               </button>
             </div>
+            <p className="text-xs leading-5 text-slate-500 dark:text-slate-400">
+              No email? Check spam. Supabase&apos;s default mail service only sends to project team addresses; use custom SMTP for other recipients.
+            </p>
           </form>
         ) : (
           <form onSubmit={handleRequestCode} className="mt-5 space-y-4">
@@ -192,6 +195,9 @@ export function EmailOtpForm() {
             >
               {isSubmitting ? "Creating account..." : "Create account and send code"}
             </button>
+            <p className="text-xs leading-5 text-slate-500 dark:text-slate-400">
+              Confirmation emails require Supabase&apos;s Confirm signup template to include <code>{"{{ .Token }}"}</code>. The default mail service only sends to project team addresses.
+            </p>
           </form>
         )}
 
